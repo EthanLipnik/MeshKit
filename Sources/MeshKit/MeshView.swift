@@ -65,7 +65,7 @@ public class MeshView: UIView {
     public final func create(_ colors: [MeshNode.Color], width: Int = 3, height: Int = 3, subdivisions: Int = 18) {
         let elements = MeshNode.generateElements(width:width,
                                                  height: height,
-                                                 colors: colors, subdivisions: 18)
+                                                 colors: colors, subdivisions: subdivisions)
         
         if let node = scene.rootNode.childNode(withName: "meshNode",
                                                recursively: false) {
