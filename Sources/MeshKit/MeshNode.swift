@@ -8,31 +8,46 @@
 import UIKit
 import SceneKit
 
-class MeshNode {
+public class MeshNode {
     
     private let linearSRGCColorSpace = CGColorSpace(name: CGColorSpace.linearSRGB)!
     
-    struct ControlPoint {
-        var color: simd_float3 = simd_float3(0, 0, 0)
+    public struct ControlPoint {
+        public init(color: simd_float3 = simd_float3(0, 0, 0), location: simd_float2 = simd_float2(0, 0), uTangent: simd_float2 = simd_float2(0, 0), vTangent: simd_float2 = simd_float2(0, 0)) {
+            self.color = color
+            self.location = location
+            self.uTangent = uTangent
+            self.vTangent = vTangent
+        }
         
-        var location: simd_float2 = simd_float2(0, 0)
-        
-        var uTangent: simd_float2 = simd_float2(0, 0)
-        
-        var vTangent: simd_float2 = simd_float2(0, 0)
+        public var color: simd_float3 = simd_float3(0, 0, 0)
+        public var location: simd_float2 = simd_float2(0, 0)
+        public var uTangent: simd_float2 = simd_float2(0, 0)
+        public var vTangent: simd_float2 = simd_float2(0, 0)
     }
     
-    struct Elements {
-        var points: Grid<simd_float2>
-        var colors: Grid<simd_float3>
+    public struct Elements {
+        public init(points: Grid<simd_float2>, colors: Grid<simd_float3>) {
+            self.points = points
+            self.colors = colors
+        }
+        
+        public var points: Grid<simd_float2>
+        public var colors: Grid<simd_float3>
     }
     
-    struct Color {
-        var point: (x: Int, y: Int)
-        var location: (x: Float, y: Float)
-        var color: UIColor
+    public struct Color {
+        public init(point: (x: Int, y: Int), location: (x: Float, y: Float), color: UIColor) {
+            self.point = point
+            self.location = location
+            self.color = color
+        }
         
-        func colorToSimd() -> simd_float3 {
+        public var point: (x: Int, y: Int)
+        public var location: (x: Float, y: Float)
+        public var color: UIColor
+        
+        public func colorToSimd() -> simd_float3 {
             var red: CGFloat = 0
             var green: CGFloat = 0
             var blue: CGFloat = 0
@@ -44,11 +59,11 @@ class MeshNode {
         }
     }
     
-    static func node(elements: Elements) -> SCNNode {
+    public static func node(elements: Elements) -> SCNNode {
         return SCNNode(points: elements.points, colors: elements.colors)
     }
     
-    static func generateElements(width: Int, height: Int, colors: [Color], subdivisions: Int) -> Elements {
+    public static func generateElements(width: Int, height: Int, colors: [Color], subdivisions: Int) -> Elements {
         /// This math is from https://github.com/movingparts-io/Gradient-Meshes-with-SceneKit
         let H = simd_float4x4(rows: [
             simd_float4( 2, -2,  1,  1),

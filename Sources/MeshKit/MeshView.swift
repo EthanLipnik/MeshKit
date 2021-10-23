@@ -8,15 +8,15 @@
 import UIKit
 import SceneKit
 
-class MeshView: UIView {
+public class MeshView: UIView {
 
     // MARK: - Views
-    lazy var scene: SCNScene = {
+    public lazy var scene: SCNScene = {
         let scene = SCNScene()
         
         return scene
     }()
-    lazy var sceneView: SCNView = {
+    public lazy var sceneView: SCNView = {
         let view = SCNView()
         
         view.scene = scene
@@ -30,22 +30,22 @@ class MeshView: UIView {
     }()
     
     // MARK: - Variables
-    lazy var debugOptions: SCNDebugOptions = []
+    public lazy var debugOptions: SCNDebugOptions = []
     
     // MARK: - Setup
-    init() {
+    public init() {
         super.init(frame: .zero)
         
         setup()
     }
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: .zero)
         
         setup()
     }
     
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         super.init(coder: coder)
         
         setup()
