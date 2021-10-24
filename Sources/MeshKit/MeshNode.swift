@@ -36,7 +36,15 @@ public class MeshNode {
         public var colors: Grid<simd_float3>
     }
     
-    public struct Color {
+    public struct Color: Identifiable, Equatable {
+        public static func == (lhs: MeshNode.Color, rhs: MeshNode.Color) -> Bool {
+            return lhs.id == rhs.id && lhs.color == rhs.color
+        }
+        
+        public var id: String {
+            return "\(point.x)\(point.y)"
+        }
+        
         public init(point: (x: Int, y: Int), location: (x: Float, y: Float), color: UIColor) {
             self.point = point
             self.location = location

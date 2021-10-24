@@ -30,7 +30,17 @@ public class MeshView: UIView {
     }()
     
     // MARK: - Variables
-    public lazy var debugOptions: SCNDebugOptions = []
+    public lazy var debugOptions: SCNDebugOptions = [] {
+        didSet {
+            sceneView.debugOptions = debugOptions
+        }
+    }
+    
+    public lazy var scaleFactor: CGFloat = contentScaleFactor {
+        didSet {
+            sceneView.contentScaleFactor = contentScaleFactor
+        }
+    }
     
     // MARK: - Setup
     public init() {
