@@ -92,4 +92,21 @@ public class MeshView: UIView {
     public final func snapshot() -> UIImage {
         return sceneView.snapshot()
     }
+    
+    public final func generate(size: CGSize) -> UIImage {
+        let renderer = SCNRenderer(device: MTLCreateSystemDefaultDevice(), options: nil)
+        renderer.isPlaying = true
+        
+        renderer.scene = scene
+        
+        let renderTime = TimeInterval(20)
+        
+        for i in 0..<60 * 10 {
+            renderer.update(atTime: Date.timeIntervalSinceReferenceDate * (1.0 / 60 * Double(i)))
+        }
+        renderer.sceneTime = renderTime
+        renderer.isJitteringEnabled = true
+        
+        return renderer.snapshot(atTime: renderTime, with: size, antialiasingMode: .multisampling4X)
+    }
 }
