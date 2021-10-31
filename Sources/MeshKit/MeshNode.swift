@@ -45,15 +45,17 @@ public class MeshNode {
             return "\(point.x)\(point.y)"
         }
         
-        public init(point: (x: Int, y: Int), location: (x: Float, y: Float), color: UIColor) {
+        public init(point: (x: Int, y: Int), location: (x: Float, y: Float), color: UIColor, tangent: (u: Float, v: Float)) {
             self.point = point
             self.location = location
             self.color = color
+            self.tangent = tangent
         }
         
         public var point: (x: Int, y: Int)
         public var location: (x: Float, y: Float)
         public var color: UIColor
+        public var tangent: (u: Float, v: Float)
         
         public func colorToSimd() -> simd_float3 {
             var red: CGFloat = 0
@@ -168,15 +170,18 @@ public class MeshNode {
         for y in 0 ..< grid.height {
             for x in 0 ..< grid.width {
                 
-                grid[x, y].uTangent.x = 2 / Float(grid.width  - 1)
-                grid[x, y].vTangent.y = 2 / Float(grid.height - 1)
-                
                 if let color = colors.first(where: { $0.point.x == x && $0.point.y == y }) {
+                    grid[x, y].uTangent.x = color.tangent.u / Float(grid.width  - 1)
+                    grid[x, y].vTangent.y = color.tangent.v / Float(grid.height - 1)
+                    
                     grid[x, y].location = simd_float2(
                         lerp(color.location.x / Float(grid.width  - 1), -1, 1),
                         lerp(color.location.y / Float(grid.height - 1), -1, 1)
                     )
                 } else {
+                    grid[x, y].uTangent.x = 2 / Float(grid.width  - 1)
+                    grid[x, y].vTangent.y = 2 / Float(grid.height - 1)
+                    
                     grid[x, y].location = simd_float2(
                         lerp(Float(x) / Float(grid.width  - 1), -1, 1),
                         lerp(Float(y) / Float(grid.height - 1), -1, 1)
