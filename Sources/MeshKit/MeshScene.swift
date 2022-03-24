@@ -27,13 +27,7 @@ open class MeshScene: SCNScene {
     
     public final func generate(size: CGSize) -> UIImage {
         let renderer = SCNRenderer(device: MTLCreateSystemDefaultDevice())
-        
         renderer.scene = self
-        
-        let renderTime = TimeInterval(1)
-        renderer.update(atTime: .zero)
-        renderer.sceneTime = renderTime
-        
-        return renderer.snapshot(atTime: renderTime, with: size, antialiasingMode: .none)
+        return renderer.snapshot(atTime: .zero, with: size, antialiasingMode: .none)
     }
 }
