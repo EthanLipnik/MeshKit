@@ -11,8 +11,8 @@ import SceneKit
 public class MeshView: UIView {
 
     // MARK: - Views
-    public lazy var scene: SCNScene = {
-        let scene = SCNScene()
+    public lazy var scene: MeshScene = {
+        let scene = MeshScene()
         
         return scene
     }()
@@ -73,20 +73,7 @@ public class MeshView: UIView {
     }
     
     public final func create(_ colors: [MeshNode.Color], width: Int = 3, height: Int = 3, subdivisions: Int = 18) {
-        let elements = MeshNode.generateElements(width:width,
-                                                 height: height,
-                                                 colors: colors, subdivisions: subdivisions)
-        
-        if let node = scene.rootNode.childNode(withName: "meshNode",
-                                               recursively: false) {
-            node.geometry = SCNNode.get(points: elements.points,
-                                        colors: elements.colors)
-        } else {
-            let node = MeshNode.node(elements: elements)
-            node.name = "meshNode"
-            
-            scene.rootNode.addChildNode(node)
-        }
+        scene.create(colors, width: width, height: height, subdivisions: subdivisions)
     }
     
     public final func snapshot() -> UIImage {
@@ -94,19 +81,6 @@ public class MeshView: UIView {
     }
     
     public final func generate(size: CGSize) -> UIImage {
-        let renderer = SCNRenderer(device: MTLCreateSystemDefaultDevice(), options: nil)
-        renderer.isPlaying = true
-        
-        renderer.scene = scene
-        
-        let renderTime = TimeInterval(20)
-        
-        for i in 0..<60 * 10 {
-            renderer.update(atTime: Date.timeIntervalSinceReferenceDate * (1.0 / 60 * Double(i)))
-        }
-        renderer.sceneTime = renderTime
-        renderer.isJitteringEnabled = true
-        
-        return renderer.snapshot(atTime: renderTime, with: size, antialiasingMode: .multisampling4X)
+        return scene.generate(size: size)
     }
 }
