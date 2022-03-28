@@ -36,7 +36,7 @@ public class MeshNode {
         public var colors: Grid<simd_float3>
     }
     
-    public struct Color: Identifiable, Equatable {
+    public struct Color: Identifiable, Equatable, Codable {
         public static func == (lhs: MeshNode.Color, rhs: MeshNode.Color) -> Bool {
             return lhs.id == rhs.id && lhs.color == rhs.color
         }
@@ -66,6 +66,63 @@ public class MeshNode {
             color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
             
             return simd_float3(Float(red), Float(green), Float(blue))
+        }
+        
+        enum CodingKeys: String, CodingKey {
+            case pointX
+            case pointY
+            
+            case locationX
+            case locationY
+            
+            case color
+            case tangentU
+            case tangentV
+        }
+        
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+            let pointX = try container.decode(Int.self, forKey: .pointX)
+            let pointY = try container.decode(Int.self, forKey: .pointY)
+            self.point = (pointX, pointY)
+            
+            let locationX = try container.decode(Float.self, forKey: .locationX)
+            let locationY = try container.decode(Float.self, forKey: .locationY)
+            self.location = (locationX, locationY)
+            
+            self.color = try container.decode(CodableColor.self, forKey: .color).uiColor
+            
+            let tangentU = try container.decode(Float.self, forKey: .tangentU)
+            let tangentV = try container.decode(Float.self, forKey: .tangentV)
+            self.tangent = (tangentU, tangentV)
+        }
+        
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            
+            try container.encode(point.x, forKey: .pointX)
+            try container.encode(point.y, forKey: .pointY)
+            
+            try container.encode(location.x, forKey: .locationX)
+            try container.encode(location.y, forKey: .locationY)
+            
+            try container.encode(CodableColor(uiColor: color), forKey: .color)
+            
+            try container.encode(tangent.u, forKey: .tangentU)
+            try container.encode(tangent.v, forKey: .tangentV)
+        }
+        
+        struct CodableColor : Codable {
+            var red : CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, alpha: CGFloat = 0.0
+            
+            var uiColor : UIColor {
+                return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+            }
+            
+            init(uiColor : UIColor) {
+                uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+            }
         }
     }
     
