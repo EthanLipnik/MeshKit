@@ -11,7 +11,8 @@ open class MeshScene: SCNScene {
     public final func create(_ colors: [MeshNode.Color], width: Int = 3, height: Int = 3, subdivisions: Int = 18) {
         let elements = MeshNode.generateElements(width:width,
                                                  height: height,
-                                                 colors: colors, subdivisions: subdivisions)
+                                                 colors: colors,
+                                                 subdivisions: subdivisions)
         
         if let node = rootNode.childNode(withName: "meshNode",
                                                recursively: false) {
@@ -21,6 +22,7 @@ open class MeshScene: SCNScene {
             let node = MeshNode.node(elements: elements)
             node.name = "meshNode"
             
+            rootNode.childNodes.forEach({ $0.removeFromParentNode() })
             rootNode.addChildNode(node)
         }
     }
