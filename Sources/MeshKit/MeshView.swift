@@ -73,9 +73,7 @@ public class MeshView: UIView {
     }
     
     public final func create(_ colors: [MeshNode.Color], width: Int = 3, height: Int = 3, subdivisions: Int = 18) {
-        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
-            self?.scene.create(colors, width: width, height: height, subdivisions: subdivisions)
-        }
+        scene.create(colors, width: width, height: height, subdivisions: subdivisions)
     }
     
     public final func snapshot() -> UIImage {
