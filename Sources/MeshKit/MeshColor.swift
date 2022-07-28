@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreGraphics
+import RandomColor
 
 public struct MeshColor: Equatable, Codable {
     public static func == (lhs: MeshColor, rhs: MeshColor) -> Bool {
@@ -89,7 +90,34 @@ extension SystemColor {
         var alpha: CGFloat = 0
 
         getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-
+        
         return SIMD3<Float>(Float(red), Float(green), Float(blue))
+    }
+}
+
+extension Hue {
+    public static var allCases: [Hue] {
+        get {
+            return [
+                .blue,
+                .orange,
+                .yellow,
+                .green,
+                .pink,
+                .purple,
+                .red,
+                .monochrome
+            ]
+        }
+    }
+    
+    public static func randomPalette(includesMonochrome: Bool = false) -> Hue {
+        var hues = allCases
+        
+        if !includesMonochrome {
+            hues.removeLast()
+        }
+        
+        return hues.randomElement() ?? .monochrome
     }
 }

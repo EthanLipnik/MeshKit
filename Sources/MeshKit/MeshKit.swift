@@ -12,9 +12,10 @@ import CoreGraphics
 
 // MARK: - MeshGradient
 public typealias MeshRandomizer = MeshGradient.MeshRandomizer
-public typealias Grid = MeshGradient.Grid
+public typealias MeshGrid = MeshGradient.Grid<MeshColor>
 public typealias ControlPoint = MeshGradient.ControlPoint
 public typealias MeshGenerator = MeshGradient.MeshGenerator
+public typealias MeshDefaults = MeshGradientDefaults
 
 // MARK: - RandomColor
 public typealias Hue = RandomColor.Hue
@@ -26,7 +27,7 @@ public actor MeshKit {
 
     public static func generate(palette hues: Hue...,
                                 luminosity: Luminosity = .bright,
-                                size: MeshSize = .default) -> Grid<MeshColor> {
+                                size: MeshSize = .default) -> MeshGrid {
 
         let colors: [SystemColor] = (hues + hues + hues).flatMap({
             randomColors(count: Int(ceil(Float(size.width * size.height) / Float(hues.count))),

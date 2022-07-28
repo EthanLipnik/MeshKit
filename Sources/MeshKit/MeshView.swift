@@ -21,4 +21,10 @@ extension Mesh {
                 subdivisions: Int = MeshGradientDefaults.subdivisions) {
         self.init(initialGrid: colors.asControlPoint(), animatorConfiguration: animatorConfiguration, grainAlpha: grainAlpha, subdivisions: subdivisions)
     }
+
+    public init(colors: Grid<MeshColor>,
+                grainAlpha: Float = MeshGradientDefaults.grainAlpha,
+                subdivisions: Int = MeshGradientDefaults.subdivisions) {
+        self.init(grid: colors.asControlPoint(), grainAlpha: grainAlpha, subdivisions: subdivisions)
+    }
 }
