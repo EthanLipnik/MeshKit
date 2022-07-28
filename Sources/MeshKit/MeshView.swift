@@ -9,12 +9,12 @@ import Foundation
 import MeshGradient
 
 #if canImport(AppKit)
-public typealias MeshView = AnimatableMeshGradient
+public typealias Mesh = MeshView
 #else
-public typealias MeshView = MeshView
+public typealias Mesh = MeshView
 #endif
 
-extension MeshView {
+extension Mesh {
     public init(colors: Grid<MeshColor>,
                 animatorConfiguration: MeshAnimator.Configuration,
                 grainAlpha: Float = MeshGradientDefaults.grainAlpha,

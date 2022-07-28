@@ -8,6 +8,7 @@
 import Foundation
 import MeshGradient
 import RandomColor
+import CoreGraphics
 
 // MARK: - MeshGradient
 public typealias MeshRandomizer = MeshGradient.MeshRandomizer

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreGraphics
 
 public struct MeshColor: Equatable, Codable {
     public static func == (lhs: MeshColor, rhs: MeshColor) -> Bool {
