@@ -23,7 +23,7 @@ public typealias Luminosity = RandomColor.Luminosity
 
 // MARK: - MeshKit
 public actor MeshKit {
-    private typealias MeshPoint = SIMD3<Float>
+    private typealias Simd3 = SIMD3<Float>
 
     public static func generate(palette hues: Hue...,
                                 luminosity: Luminosity = .bright,
@@ -38,7 +38,7 @@ public actor MeshKit {
         let simdColors = colors.map({ $0.asSimd() })
         let meshRandomizer = MeshRandomizer(colorRandomizer: MeshRandomizer.arrayBasedColorRandomizer(availableColors: simdColors))
 
-        let preparationGrid = Grid<MeshPoint>(repeating: .zero, width: size.width, height: size.height)
+        let preparationGrid = Grid<Simd3>(repeating: .zero, width: size.width, height: size.height)
         var result = MeshGenerator.generate(colorDistribution: preparationGrid)
 
         // And here we shuffle the grid using randomizer that we created
@@ -66,13 +66,14 @@ extension Grid where Element == ControlPoint {
                     let point = self[x, y]
                     colors.append(
                         MeshColor(
-                            location: (point.location.x, point.location.y),
+                            startLocation: MeshPoint(x: point.location.x, y: point.location.y),
+                            location: MeshPoint(x: point.location.x, y: point.location.y),
                             color: SystemColor(red: CGFloat(point.color.x),
                                                green: CGFloat(point.color.y),
                                                blue: CGFloat(point.color.z),
                                                alpha: 1),
-                            tangent: (MeshSize(width: Int(point.uTangent.x), height: Int(point.uTangent.y)),
-                                      MeshSize(width: Int(point.vTangent.x), height: Int(point.vTangent.y)))
+                            tangent: MeshTangent(u: MeshPoint(x: point.uTangent.x, y: point.uTangent.y),
+                                                 v: MeshPoint(x: point.vTangent.x, y: point.vTangent.y))
                         )
                     )
                 }
@@ -100,10 +101,10 @@ extension Grid where Element == MeshColor {
                         ControlPoint(
                             color: color.asSimd(),
                             location: simd_float2(color.location.x, color.location.y),
-                            uTangent: simd_float2(Float(color.tangent.u.width),
-                                                  Float(color.tangent.u.height)),
-                            vTangent: simd_float2(Float(color.tangent.v.width),
-                                                  Float(color.tangent.v.height))
+                            uTangent: simd_float2(color.tangent.u.x,
+                                                  color.tangent.u.y),
+                            vTangent: simd_float2(color.tangent.v.x,
+                                                  color.tangent.v.y)
                         )
                     )
                 }
@@ -113,6 +114,10 @@ extension Grid where Element == MeshColor {
         }()
 
         return grid
+    }
+    
+    public func isEdge(x: Int, y: Int) -> Bool {
+        return !(x != 0 && x != width - 1 && y != 0 && y != height - 1)
     }
 }
 
