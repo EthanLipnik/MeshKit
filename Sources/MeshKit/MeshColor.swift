@@ -9,9 +9,16 @@ import Foundation
 import CoreGraphics
 import RandomColor
 
-public class MeshColor: Equatable, Codable {
+public class MeshColor: Equatable, Hashable, Codable {
     public static func == (lhs: MeshColor, rhs: MeshColor) -> Bool {
         return lhs.location == rhs.location && lhs.color == rhs.color && lhs.tangent == rhs.tangent
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(startLocation)
+        hasher.combine(location)
+        hasher.combine(color)
+        hasher.combine(tangent)
     }
 
     public init(startLocation: MeshPoint = .zero, location: MeshPoint = .zero, color: SystemColor = .white, tangent: MeshTangent = .zero) {
@@ -98,7 +105,7 @@ extension Hue {
         }
     }
     
-    public static func randomPalette(includesMonochrome: Bool = false) -> Hue {
+    public static func randomPalette(includesMonochrome: Bool = true) -> Hue {
         var hues = allCases
         
         if !includesMonochrome {

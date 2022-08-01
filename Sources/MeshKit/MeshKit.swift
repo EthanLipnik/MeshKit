@@ -15,7 +15,12 @@ public typealias MeshRandomizer = MeshGradient.MeshRandomizer
 public typealias MeshGrid = MeshGradient.Grid<MeshColor>
 public typealias ControlPoint = MeshGradient.ControlPoint
 public typealias MeshGenerator = MeshGradient.MeshGenerator
-public typealias MeshDefaults = MeshGradientDefaults
+public typealias MeshDefaults = MeshGradient.MeshGradientDefaults
+public typealias StaticMeshDataProvider = MeshGradient.StaticMeshDataProvider
+public typealias MeshDataProvider = MeshGradient.MeshDataProvider
+public typealias MetalMeshRenderer = MeshGradient.MetalMeshRenderer
+public typealias MeshAnimator = MeshGradient.MeshAnimator
+public typealias Grid = MeshGradient.Grid
 
 // MARK: - RandomColor
 public typealias Hue = RandomColor.Hue
@@ -44,10 +49,6 @@ public actor MeshKit {
         // And here we shuffle the grid using randomizer that we created
         for y in stride(from: 0, to: result.width, by: 1) {
             for x in stride(from: 0, to: result.height, by: 1) {
-                meshRandomizer.locationRandomizer(&result[x, y].location, x, y, result.width, result.height)
-                meshRandomizer.turbulencyRandomizer(&result[x, y].uTangent, x, y, result.width, result.height)
-                meshRandomizer.turbulencyRandomizer(&result[x, y].vTangent, x, y, result.width, result.height)
-
                 meshRandomizer.colorRandomizer(&result[x, y].color, result[x, y].color, x, y, result.width, result.height)
             }
         }
