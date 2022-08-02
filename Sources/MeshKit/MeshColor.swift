@@ -105,6 +105,31 @@ extension Hue {
         }
     }
     
+    public var displayTitle: String {
+        switch self {
+        case .monochrome:
+            return "Monochrome"
+        case .red:
+            return "Red"
+        case .orange:
+            return "Orange"
+        case .yellow:
+            return "Yellow"
+        case .green:
+            return "Green"
+        case .blue:
+            return "Blue"
+        case .purple:
+            return "Purple"
+        case .pink:
+            return "Pink"
+        case .random:
+            return "Random"
+        default:
+            return "Unknown Palette"
+        }
+    }
+    
     public static func randomPalette(includesMonochrome: Bool = true) -> Hue {
         var hues = allCases
         
