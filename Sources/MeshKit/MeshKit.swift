@@ -32,7 +32,8 @@ public actor MeshKit {
 
     public static func generate(palette hues: Hue...,
                                 luminosity: Luminosity = .bright,
-                                size: MeshSize = .default) -> MeshGrid {
+                                size: MeshSize = .default,
+                                withRandomizedLocations: Bool = false) -> MeshGrid {
 
         let colors: [SystemColor] = (hues + hues + hues).flatMap({
             randomColors(count: Int(ceil(Float(size.width * size.height) / Float(hues.count))),
@@ -49,6 +50,11 @@ public actor MeshKit {
         // And here we shuffle the grid using randomizer that we created
         for y in stride(from: 0, to: result.width, by: 1) {
             for x in stride(from: 0, to: result.height, by: 1) {
+                if withRandomizedLocations {
+                    meshRandomizer.locationRandomizer(&result[x, y].location, x, y, result.width, result.height)
+                    meshRandomizer.turbulencyRandomizer(&result[x, y].uTangent, x, y, result.width, result.height)
+                    meshRandomizer.turbulencyRandomizer(&result[x, y].vTangent, x, y, result.width, result.height)
+                }
                 meshRandomizer.colorRandomizer(&result[x, y].color, result[x, y].color, x, y, result.width, result.height)
             }
         }
