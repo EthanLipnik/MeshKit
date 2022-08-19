@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,10 +6,10 @@ import PackageDescription
 let package = Package(
     name: "MeshKit",
     platforms: [
-        .macOS(.v10_15),
-        .iOS(.v13),
-        .macCatalyst(.v13),
-        .tvOS(.v13),
+        .macOS(.v11),
+        .iOS(.v14),
+        .macCatalyst(.v14),
+        .tvOS(.v14),
     ],
     products: [
         .library(
@@ -17,7 +17,7 @@ let package = Package(
             targets: ["MeshKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/EthanLipnik/MeshGradient.git", from: "1.0.5"),
+        .package(url: "https://github.com/EthanLipnik/MeshGradient.git", from: "1.0.6"),
         .package(url: "https://github.com/EthanLipnik/RandomColorSwift.git", from: "2.0.1")
     ],
     targets: [

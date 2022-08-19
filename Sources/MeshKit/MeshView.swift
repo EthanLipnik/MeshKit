@@ -7,6 +7,7 @@
 
 import Foundation
 import MeshGradient
+import MetalKit
 
 #if canImport(AppKit)
 public typealias Mesh = MeshView
@@ -15,16 +16,23 @@ public typealias Mesh = MeshView
 #endif
 
 extension Mesh {
-    public init(colors: Grid<MeshColor>,
+    public init(colors: MeshGrid<MeshColor>,
                 animatorConfiguration: MeshAnimator.Configuration,
                 grainAlpha: Float = MeshGradientDefaults.grainAlpha,
                 subdivisions: Int = MeshGradientDefaults.subdivisions) {
         self.init(initialGrid: colors.asControlPoint(), animatorConfiguration: animatorConfiguration, grainAlpha: grainAlpha, subdivisions: subdivisions)
     }
 
-    public init(colors: Grid<MeshColor>,
+    public init(colors: MeshGrid<MeshColor>,
                 grainAlpha: Float = MeshGradientDefaults.grainAlpha,
                 subdivisions: Int = MeshGradientDefaults.subdivisions) {
         self.init(grid: colors.asControlPoint(), grainAlpha: grainAlpha, subdivisions: subdivisions)
+    }
+}
+
+extension MTKView {
+    public func export() -> CIImage? {
+        guard let texture = self.currentDrawable?.texture else { return nil }
+        return CIImage(mtlTexture: texture)
     }
 }

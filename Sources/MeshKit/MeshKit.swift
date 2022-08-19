@@ -12,7 +12,7 @@ import CoreGraphics
 
 // MARK: - MeshGradient
 public typealias MeshRandomizer = MeshGradient.MeshRandomizer
-public typealias MeshGrid = MeshGradient.Grid<MeshColor>
+public typealias MeshColorGrid = MeshGradient.Grid<MeshColor>
 public typealias ControlPoint = MeshGradient.ControlPoint
 public typealias MeshGenerator = MeshGradient.MeshGenerator
 public typealias MeshDefaults = MeshGradient.MeshGradientDefaults
@@ -20,7 +20,8 @@ public typealias StaticMeshDataProvider = MeshGradient.StaticMeshDataProvider
 public typealias MeshDataProvider = MeshGradient.MeshDataProvider
 public typealias MetalMeshRenderer = MeshGradient.MetalMeshRenderer
 public typealias MeshAnimator = MeshGradient.MeshAnimator
-public typealias Grid = MeshGradient.Grid
+public typealias MeshGrid = MeshGradient.Grid
+public typealias MeshGradientState = MeshGradient.MeshGradientState
 
 // MARK: - RandomColor
 public typealias Hue = RandomColor.Hue
@@ -33,7 +34,7 @@ public actor MeshKit {
     public static func generate(palette hues: Hue...,
                                 luminosity: Luminosity = .bright,
                                 size: MeshSize = .default,
-                                withRandomizedLocations: Bool = false) -> MeshGrid {
+                                withRandomizedLocations: Bool = false) -> MeshColorGrid {
 
         let colors: [SystemColor] = (hues + hues + hues).flatMap({
             randomColors(count: Int(ceil(Float(size.width * size.height) / Float(hues.count))),
@@ -44,7 +45,7 @@ public actor MeshKit {
         let simdColors = colors.map({ $0.asSimd() })
         let meshRandomizer = MeshRandomizer(colorRandomizer: MeshRandomizer.arrayBasedColorRandomizer(availableColors: simdColors))
 
-        let preparationGrid = Grid<Simd3>(repeating: .zero, width: size.width, height: size.height)
+        let preparationGrid = MeshGrid<Simd3>(repeating: .zero, width: size.width, height: size.height)
         var result = MeshGenerator.generate(colorDistribution: preparationGrid)
 
         // And here we shuffle the grid using randomizer that we created
@@ -60,79 +61,5 @@ public actor MeshKit {
         }
 
         return result.asMeshColor()
-    }
-}
-
-extension Grid where Element == ControlPoint {
-    public func asMeshColor() -> Grid<MeshColor> {
-        var grid = Grid<MeshColor>(repeating: .init(), width: width, height: height)
-        grid.elements = {
-            var colors: ContiguousArray<MeshColor> = []
-            for y in stride(from: 0, to: self.width, by: 1) {
-                for x in stride(from: 0, to: self.height, by: 1) {
-                    let point = self[x, y]
-                    colors.append(
-                        MeshColor(
-                            startLocation: MeshPoint(x: point.location.x, y: point.location.y),
-                            location: MeshPoint(x: point.location.x, y: point.location.y),
-                            color: SystemColor(red: CGFloat(point.color.x),
-                                               green: CGFloat(point.color.y),
-                                               blue: CGFloat(point.color.z),
-                                               alpha: 1),
-                            tangent: MeshTangent(u: MeshPoint(x: point.uTangent.x, y: point.uTangent.y),
-                                                 v: MeshPoint(x: point.vTangent.x, y: point.vTangent.y))
-                        )
-                    )
-                }
-            }
-
-            return colors
-        }()
-
-        return grid
-    }
-}
-
-extension Grid where Element == MeshColor {
-
-    private typealias simd_float2 = SIMD2<Float>
-
-    public func asControlPoint() -> Grid<ControlPoint> {
-        var grid = Grid<ControlPoint>(repeating: .zero, width: width, height: height)
-        grid.elements = {
-            var controlPoints: ContiguousArray<ControlPoint> = []
-            for y in stride(from: 0, to: self.width, by: 1) {
-                for x in stride(from: 0, to: self.height, by: 1) {
-                    let color = self[x, y]
-                    controlPoints.append(
-                        ControlPoint(
-                            color: color.asSimd(),
-                            location: simd_float2(color.location.x, color.location.y),
-                            uTangent: simd_float2(color.tangent.u.x,
-                                                  color.tangent.u.y),
-                            vTangent: simd_float2(color.tangent.v.x,
-                                                  color.tangent.v.y)
-                        )
-                    )
-                }
-            }
-
-            return controlPoints
-        }()
-
-        return grid
-    }
-    
-    public func isEdge(x: Int, y: Int) -> Bool {
-        return !(x != 0 && x != width - 1 && y != 0 && y != height - 1)
-    }
-}
-
-extension MeshRandomizer {
-    public static func withMeshColors(_ meshColors: Grid<MeshColor>) -> MeshRandomizer {
-        MeshRandomizer(
-            colorRandomizer: MeshRandomizer
-                .arrayBasedColorRandomizer(availableColors: meshColors.elements.map({ $0.asSimd() }))
-        )
     }
 }
