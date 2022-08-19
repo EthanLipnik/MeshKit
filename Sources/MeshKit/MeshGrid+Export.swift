@@ -51,7 +51,7 @@ extension MeshColorGrid {
                 } else {
                     continuation.resume(throwing: NSError(domain: "Failed to create texture", code: -1))
                 }
-                
+
                 metalLayer?.removeFromSuperlayer()
                 metalLayer = nil
             }
