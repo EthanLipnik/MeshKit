@@ -9,7 +9,7 @@ final class MeshKitTests: XCTestCase {
             Task {
                 let mesh = MeshKit.generate(palette: .randomPalette(), luminosity: .bright, size: .init(width: 5, height: 5))
                 do {
-                    let url = try await mesh.export(size: .init(x: 720, y: 720), colorSpace: .init(name: CGColorSpace.displayP3))
+                    let url = try await mesh.export(size: .init(width: 720, height: 720), colorSpace: .init(name: CGColorSpace.displayP3))
                     print(url.path)
                 } catch {
                     print(error)

@@ -1,25 +1,23 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "MeshGradient",
-        "repositoryURL": "https://github.com/Nekitosss/MeshGradient.git",
-        "state": {
-          "branch": null,
-          "revision": "e93762060e160523189d085cd744ebe411c60e42",
-          "version": "1.0.0"
-        }
-      },
-      {
-        "package": "RandomColor",
-        "repositoryURL": "https://github.com/EthanLipnik/RandomColorSwift.git",
-        "state": {
-          "branch": null,
-          "revision": "cb118928dfd40baaa31dc1bd87c97599bcf86d75",
-          "version": "2.0.1"
-        }
+  "pins" : [
+    {
+      "identity" : "meshgradient",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/EthanLipnik/MeshGradient.git",
+      "state" : {
+        "revision" : "6497aed1898ecc1f24a6ace6537c13bd86221a08",
+        "version" : "1.0.8"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "randomcolorswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/EthanLipnik/RandomColorSwift.git",
+      "state" : {
+        "revision" : "cb118928dfd40baaa31dc1bd87c97599bcf86d75",
+        "version" : "2.0.1"
+      }
+    }
+  ],
+  "version" : 2
 }
