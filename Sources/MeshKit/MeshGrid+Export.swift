@@ -52,7 +52,7 @@ extension MeshColorGrid {
                           renderPassDescriptor: renderPassDescriptor,
                           currentDrawable: currentDrwable) { texture in
                 if let texture {
-                    texture.writeTexture(url: url, type: fileFormat)
+                    texture.writeTexture(url: url, type: fileFormat, colorSpace: colorSpace)
                     continuation.resume(returning: url)
                 } else {
                     continuation.resume(throwing: NSError(domain: "Failed to create texture", code: -1))
@@ -120,8 +120,8 @@ extension MTLTexture {
         vImagePermuteChannels_ARGB8888(&sourceBuffer, &destBuffer, &swizzleMask, vImage_Flags(kvImageNoFlags))
     }
 
-    func writeTexture(url: URL, type: UTType = .png) {
-        guard let image = makeImage() else { return }
+    func writeTexture(url: URL, type: UTType = .png, colorSpace: CGColorSpace? = nil) {
+        guard let image = makeImage(colorSpace: colorSpace) else { return }
 
         if let imageDestination = CGImageDestinationCreateWithURL(url as CFURL, type.identifier as CFString, 1, nil) {
             CGImageDestinationAddImage(imageDestination, image, nil)
