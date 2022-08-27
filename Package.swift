@@ -17,7 +17,7 @@ let package = Package(
             targets: ["MeshKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/EthanLipnik/MeshGradient.git", from: "1.0.8"),
+        .package(url: "https://github.com/EthanLipnik/MeshGradient.git", from: "1.0.9"),
         .package(url: "https://github.com/EthanLipnik/RandomColorSwift.git", from: "2.0.1")
     ],
     targets: [
