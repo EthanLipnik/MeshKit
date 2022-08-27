@@ -43,7 +43,8 @@ public actor MeshKit {
         })
 
         let simdColors = colors.map({ $0.asSimd() })
-        let meshRandomizer = MeshRandomizer(colorRandomizer: MeshRandomizer.arrayBasedColorRandomizer(availableColors: simdColors))
+        let meshRandomizer = MeshRandomizer(locationRandomizer: MeshRandomizer.randomizeLocationExceptEdges(range: -0.2...0.2),
+                                            colorRandomizer: MeshRandomizer.arrayBasedColorRandomizer(availableColors: simdColors))
 
         let preparationGrid = MeshGrid<Simd3>(repeating: .zero, width: size.width, height: size.height)
         var result = MeshGenerator.generate(colorDistribution: preparationGrid)
