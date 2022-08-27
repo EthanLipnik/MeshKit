@@ -35,7 +35,8 @@ public actor MeshKit {
                                 luminosity: Luminosity = .bright,
                                 size: MeshSize = .default,
                                 withRandomizedLocations: Bool = false,
-                                locationRandomizationRange: ClosedRange<Float> = -0.2...0.2) -> MeshColorGrid {
+                                locationRandomizationRange: ClosedRange<Float> = -0.2...0.2,
+                                turbulencyRandomizationRange: ClosedRange<Float> = -0.25...0.25) -> MeshColorGrid {
         
         let colors: [SystemColor] = (hues + hues + hues).flatMap({
             randomColors(count: Int(ceil(Float(size.width * size.height) / Float(hues.count))),
@@ -46,6 +47,7 @@ public actor MeshKit {
         let simdColors = colors.map({ $0.asSimd() })
         let meshRandomizer = MeshRandomizer(
             locationRandomizer: MeshRandomizer.randomizeLocationExceptEdges(range: locationRandomizationRange),
+            turbulencyRandomizer: MeshRandomizer.randomizeTurbulencyExceptEdges(range: turbulencyRandomizationRange),
             colorRandomizer: MeshRandomizer.arrayBasedColorRandomizer(availableColors: simdColors)
         )
 
