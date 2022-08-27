@@ -30,21 +30,24 @@ public typealias Luminosity = RandomColor.Luminosity
 // MARK: - MeshKit
 public actor MeshKit {
     private typealias Simd3 = SIMD3<Float>
-
+    
     public static func generate(palette hues: Hue...,
                                 luminosity: Luminosity = .bright,
                                 size: MeshSize = .default,
-                                withRandomizedLocations: Bool = false) -> MeshColorGrid {
-
+                                withRandomizedLocations: Bool = false,
+                                locationRandomizationRange: ClosedRange<Float> = -0.2...0.2) -> MeshColorGrid {
+        
         let colors: [SystemColor] = (hues + hues + hues).flatMap({
             randomColors(count: Int(ceil(Float(size.width * size.height) / Float(hues.count))),
                          hue: $0,
                          luminosity: luminosity)
         })
-
+        
         let simdColors = colors.map({ $0.asSimd() })
-        let meshRandomizer = MeshRandomizer(locationRandomizer: MeshRandomizer.randomizeLocationExceptEdges(range: -0.2...0.2),
-                                            colorRandomizer: MeshRandomizer.arrayBasedColorRandomizer(availableColors: simdColors))
+        let meshRandomizer = MeshRandomizer(
+            locationRandomizer: MeshRandomizer.randomizeLocationExceptEdges(range: locationRandomizationRange),
+            colorRandomizer: MeshRandomizer.arrayBasedColorRandomizer(availableColors: simdColors)
+        )
 
         let preparationGrid = MeshGrid<Simd3>(repeating: .zero, width: size.width, height: size.height)
         var result = MeshGenerator.generate(colorDistribution: preparationGrid)
