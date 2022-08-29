@@ -21,20 +21,40 @@ struct GrabberView: View {
                         let offset = (grid.height - 1)
                         let isEdge = grid.isEdge(x: x, y: y)
                         
-                        let xOffset = CGFloat(Int(proxy.size.width) * x) / CGFloat(grid.width - 1)
-                        let yOffset = CGFloat(Int(proxy.size.height) * y) / CGFloat(grid.height - 1)
+                        let xOffset = Self.getOffset(grid.width, 
+                                                     sizeWidth: Int(proxy.size.width), 
+                                                     point: CGFloat(x))
+                        let yOffset = Self.getOffset(grid.height,
+                                                     sizeWidth: Int(proxy.size.height), 
+                                                     point: CGFloat(y))
                         
-                        PointView(point: $grid[x, offset - y], grid: $grid, selectedPoint: $selectedPoint, proxy: proxy, isEdge: isEdge) { translation, meshPoint in
+                        PointView(
+                            point: $grid[x, offset - y], 
+                            grid: $grid, 
+                            selectedPoint: $selectedPoint,
+                            proxy: proxy, 
+                            isEdge: isEdge
+                        ) { translation, meshPoint in
                             didMovePoint(x, offset - y, translation, meshPoint)
                         }
                         .offset(
-                            x: xOffset - (x + 1 == grid.width ? 60 : 0) + (x == 0 ? 30 : -30),
-                            y: yOffset - (y + 1 == grid.height ? 60 : 0) + (y == 0 ? 30 : -30)
+                            x: xOffset - (x + 1 == grid.width ? 30 : 0) + (x == 0 ? 30 : -30),
+                            y: yOffset - (y + 1 == grid.height ? 30 : 0) + (y == 0 ? 30 : -30)
                         )
                     }
                 }
             }
         }
+    }
+    
+    // (viewWidth*point) / (gridWidth - 1)
+    private static func getOffset(_ width: Int, sizeWidth: Int, point: CGFloat) -> CGFloat {
+        return (CGFloat(sizeWidth) * point) / CGFloat(width - 1)
+    }
+    
+    // (viewWidth/point) * (gridWidth - 1)
+    private static func getLocation(_ width: Int, sizeWidth: Int, point: CGFloat) -> CGFloat {
+        return getOffset(width, sizeWidth: sizeWidth, point: point) / CGFloat(sizeWidth)
     }
 
     struct PointView: View {
@@ -60,6 +80,16 @@ struct GrabberView: View {
                 .onTapGesture {
                     selectedPoint = point
                 }
+                .onChange(of: proxy.size) { size in
+                    updateOffset(location: .init(
+                        x: GrabberView.getOffset(grid.width,
+                                                 sizeWidth: Int(size.width) / grid.width, 
+                                                 point: CGFloat(point.location.x)),
+                        y: -GrabberView.getOffset(grid.height,
+                                                  sizeWidth: Int(size.height) / grid.height, 
+                                                  point: CGFloat(point.location.y))
+                    ))
+                }
                 .gesture(
                     DragGesture()
                         .onChanged({ value in
@@ -74,19 +104,26 @@ struct GrabberView: View {
                             width = min(0.3, max(-0.3, width))
                             height = min(0.3, max(-0.3, height))
                             
-                            let meshPoint = MeshPoint(x: Float(width) + point.startLocation.x, y: -Float(height) + point.startLocation.y)
+                            let meshPoint = MeshPoint(x: Float(width), 
+                                                      y: -Float(height))
                             point.location = meshPoint
 
-                            let offsetWidth = -proxy.size.width / CGFloat(grid.width)
-                            let offsetX = min(abs(offsetWidth) - 45, max(offsetWidth + 45, location.x))
-
-                            let offsetHeight = -proxy.size.height / CGFloat(grid.height)
-                            let offsetY = min(abs(offsetHeight) - 45, max(offsetHeight + 45, location.y))
-                            offset = CGSize(width: offsetX, height: offsetY)
+                            updateOffset(location: location)
 
                             didMove(CGSize(width: width, height: 1 - height), meshPoint)
                         })
                 )
+        }
+        
+        func updateOffset(location: CGPoint) {
+            guard !isEdge else { return }
+            
+            let offsetWidth = -proxy.size.width / CGFloat(grid.width)
+            let offsetX = min(abs(offsetWidth) - 45, max(offsetWidth + 45, location.x))
+
+            let offsetHeight = -proxy.size.height / CGFloat(grid.height)
+            let offsetY = min(abs(offsetHeight) - 45, max(offsetHeight + 45, location.y))
+            offset = CGSize(width: offsetX, height: offsetY)
         }
     }
 }
