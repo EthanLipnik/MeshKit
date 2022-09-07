@@ -51,11 +51,6 @@ struct GrabberView: View {
     private static func getOffset(_ width: Int, sizeWidth: Int, point: CGFloat) -> CGFloat {
         return (CGFloat(sizeWidth) * point) / CGFloat(width - 1)
     }
-    
-    // (viewWidth/point) * (gridWidth - 1)
-    private static func getLocation(_ width: Int, sizeWidth: Int, point: CGFloat) -> CGFloat {
-        return getOffset(width, sizeWidth: sizeWidth, point: point) / CGFloat(sizeWidth)
-    }
 
     struct PointView: View {
         @Binding var point: MeshColor
@@ -80,16 +75,6 @@ struct GrabberView: View {
                 .onTapGesture {
                     selectedPoint = point
                 }
-                .onChange(of: proxy.size) { size in
-                    updateOffset(location: .init(
-                        x: GrabberView.getOffset(grid.width,
-                                                 sizeWidth: Int(size.width) / grid.width, 
-                                                 point: CGFloat(point.location.x)),
-                        y: -GrabberView.getOffset(grid.height,
-                                                  sizeWidth: Int(size.height) / grid.height, 
-                                                  point: CGFloat(point.location.y))
-                    ))
-                }
                 .gesture(
                     DragGesture()
                         .onChanged({ value in
@@ -104,8 +89,8 @@ struct GrabberView: View {
                             width = min(0.3, max(-0.3, width))
                             height = min(0.3, max(-0.3, height))
                             
-                            let meshPoint = MeshPoint(x: Float(width), 
-                                                      y: -Float(height))
+                            let meshPoint = MeshPoint(x: Float(width) + point.startLocation.x, 
+                                                      y: -Float(height) + point.startLocation.y)
                             point.location = meshPoint
 
                             updateOffset(location: location)
