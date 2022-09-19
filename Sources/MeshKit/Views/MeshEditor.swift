@@ -15,7 +15,7 @@ public struct MeshEditor: View {
     public var subdivisions: Float
     public var colorSpace: CGColorSpace?
     
-    @State private var currentOffset: CGSize = .zero
+    @State private var currentId: UUID = .init()
     
     public init(colors: Binding<MeshColorGrid>,
                 selectedPoint: Binding<MeshColor?>,
@@ -46,13 +46,13 @@ public struct MeshEditor: View {
                      colorSpace: colorSpace)
             }
             
-            GrabberView(grid: $colors, selectedPoint: $selectedPoint) { x, y, translation, _ in
-                currentOffset = translation
+            GrabberView(grid: $colors, selectedPoint: $selectedPoint) {
+                currentId = .init()
             }
             .allowsHitTesting(meshRandomizer == nil)
             
             // This is used to update the view on drag.
-            Text("\(currentOffset.width) \(currentOffset.height)").hidden()
+            Text(currentId.uuidString).hidden()
         }
     }
 }

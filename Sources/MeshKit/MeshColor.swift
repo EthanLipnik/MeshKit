@@ -100,7 +100,8 @@ extension Hue {
                 .pink,
                 .purple,
                 .red,
-                .monochrome
+                .monochrome,
+                .random
             ]
         }
     }
