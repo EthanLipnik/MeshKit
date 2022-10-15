@@ -61,7 +61,7 @@ struct GrabberView: View {
         var didMove: (_ translation: CGSize) -> Void
         
         @State private var isShowingOptions: Bool = false
-        @State private var selectedColor: CGColor = .clear
+        @State private var selectedColor: CGColor = .init(red: 0, green: 0, blue: 0, alpha: 1)
         
         @State private var offset: CGSize = .zero
         
@@ -119,7 +119,11 @@ struct GrabberView: View {
                     Text("Color")
                 }
                 .onChange(of: selectedColor) { newValue in
+                    #if os(macOS)
                     point.color = SystemColor(cgColor: newValue) ?? point.color
+                    #else
+                    point.color = SystemColor(cgColor: newValue)
+                    #endif
                     didMove(CGSize(width: CGFloat.random(in: 0..<500), height: CGFloat.random(in: 0..<500)))
                 }
             }
