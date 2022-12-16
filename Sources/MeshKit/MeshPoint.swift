@@ -1,6 +1,6 @@
 //
 //  MeshPoint.swift
-//  
+//
 //
 //  Created by Ethan Lipnik on 7/29/22.
 //
@@ -12,10 +12,10 @@ public struct MeshPoint: Codable, Hashable, Equatable {
         self.x = x
         self.y = y
     }
-    
+
     public var x: Float
     public var y: Float
-    
+
     public static var zero: MeshPoint {
         return MeshPoint()
     }

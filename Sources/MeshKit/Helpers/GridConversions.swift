@@ -1,6 +1,6 @@
 //
 //  GridConversions.swift
-//  
+//
 //
 //  Created by Ethan Lipnik on 8/18/22.
 //
@@ -8,8 +8,8 @@
 import Foundation
 import MeshGradient
 
-extension Grid where Element == ControlPoint {
-    public func asMeshColor() -> MeshGrid<MeshColor> {
+public extension Grid where Element == ControlPoint {
+    func asMeshColor() -> MeshGrid<MeshColor> {
         var grid = MeshGrid<MeshColor>(repeating: .init(), width: width, height: height)
         grid.elements = {
             var colors: ContiguousArray<MeshColor> = []
@@ -20,12 +20,16 @@ extension Grid where Element == ControlPoint {
                         MeshColor(
                             startLocation: MeshPoint(x: point.location.x, y: point.location.y),
                             location: MeshPoint(x: point.location.x, y: point.location.y),
-                            color: SystemColor(red: CGFloat(point.color.x),
-                                               green: CGFloat(point.color.y),
-                                               blue: CGFloat(point.color.z),
-                                               alpha: 1),
-                            tangent: MeshTangent(u: MeshPoint(x: point.uTangent.x, y: point.uTangent.y),
-                                                 v: MeshPoint(x: point.vTangent.x, y: point.vTangent.y))
+                            color: SystemColor(
+                                red: CGFloat(point.color.x),
+                                green: CGFloat(point.color.y),
+                                blue: CGFloat(point.color.z),
+                                alpha: 1
+                            ),
+                            tangent: MeshTangent(
+                                u: MeshPoint(x: point.uTangent.x, y: point.uTangent.y),
+                                v: MeshPoint(x: point.vTangent.x, y: point.vTangent.y)
+                            )
                         )
                     )
                 }
@@ -38,11 +42,10 @@ extension Grid where Element == ControlPoint {
     }
 }
 
-extension Grid where Element == MeshColor {
-
+public extension Grid where Element == MeshColor {
     private typealias simd_float2 = SIMD2<Float>
 
-    public func asControlPoint() -> MeshGrid<ControlPoint> {
+    func asControlPoint() -> MeshGrid<ControlPoint> {
         var grid = MeshGrid<ControlPoint>(repeating: .zero, width: width, height: height)
         grid.elements = {
             var controlPoints: ContiguousArray<ControlPoint> = []
@@ -53,10 +56,14 @@ extension Grid where Element == MeshColor {
                         ControlPoint(
                             color: color.asSimd(),
                             location: simd_float2(color.location.x, color.location.y),
-                            uTangent: simd_float2(color.tangent.u.x,
-                                                  color.tangent.u.y),
-                            vTangent: simd_float2(color.tangent.v.x,
-                                                  color.tangent.v.y)
+                            uTangent: simd_float2(
+                                color.tangent.u.x,
+                                color.tangent.u.y
+                            ),
+                            vTangent: simd_float2(
+                                color.tangent.v.x,
+                                color.tangent.v.y
+                            )
                         )
                     )
                 }
@@ -68,16 +75,16 @@ extension Grid where Element == MeshColor {
         return grid
     }
 
-    public func isEdge(x: Int, y: Int) -> Bool {
+    func isEdge(x: Int, y: Int) -> Bool {
         return !(x != 0 && x != width - 1 && y != 0 && y != height - 1)
     }
 }
 
-extension MeshRandomizer {
-    public static func withMeshColors(_ meshColors: MeshGrid<MeshColor>) -> MeshRandomizer {
+public extension MeshRandomizer {
+    static func withMeshColors(_ meshColors: MeshGrid<MeshColor>) -> MeshRandomizer {
         MeshRandomizer(
             colorRandomizer: MeshRandomizer
-                .arrayBasedColorRandomizer(availableColors: meshColors.elements.map({ $0.asSimd() }))
+                .arrayBasedColorRandomizer(availableColors: meshColors.elements.map { $0.asSimd() })
         )
     }
 }

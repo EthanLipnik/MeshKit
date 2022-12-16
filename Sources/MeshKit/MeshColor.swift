@@ -1,12 +1,12 @@
 //
 //  MeshColor.swift
-//  
+//
 //
 //  Created by Ethan Lipnik on 7/27/22.
 //
 
-import Foundation
 import CoreGraphics
+import Foundation
 import RandomColor
 
 public class MeshColor: Equatable, Hashable, Codable {
@@ -21,7 +21,12 @@ public class MeshColor: Equatable, Hashable, Codable {
         hasher.combine(tangent)
     }
 
-    public init(startLocation: MeshPoint = .zero, location: MeshPoint = .zero, color: SystemColor = .white, tangent: MeshTangent = .zero) {
+    public init(
+        startLocation: MeshPoint = .zero,
+        location: MeshPoint = .zero,
+        color: SystemColor = .white,
+        tangent: MeshTangent = .zero
+    ) {
         self.startLocation = startLocation
         self.location = location
         self.color = color
@@ -45,13 +50,13 @@ public class MeshColor: Equatable, Hashable, Codable {
         case tangent
     }
 
-    required public init(from decoder: Decoder) throws {
+    public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        self.startLocation = try container.decode(MeshPoint.self, forKey: .startLocation)
-        self.location = try container.decode(MeshPoint.self, forKey: .location)
-        self.color = try container.decode(CodableColor.self, forKey: .color).uiColor
-        self.tangent = try container.decode(MeshTangent.self, forKey: .tangent)
+        startLocation = try container.decode(MeshPoint.self, forKey: .startLocation)
+        location = try container.decode(MeshPoint.self, forKey: .location)
+        color = try container.decode(CodableColor.self, forKey: .color).uiColor
+        tangent = try container.decode(MeshTangent.self, forKey: .tangent)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -63,50 +68,48 @@ public class MeshColor: Equatable, Hashable, Codable {
         try container.encode(tangent, forKey: .tangent)
     }
 
-    struct CodableColor : Codable {
-        var red : CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, alpha: CGFloat = 0.0
+    struct CodableColor: Codable {
+        var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, alpha: CGFloat = 0.0
 
-        var uiColor : SystemColor {
+        var uiColor: SystemColor {
             return SystemColor(red: red, green: green, blue: blue, alpha: alpha)
         }
 
-        init(uiColor : SystemColor) {
+        init(uiColor: SystemColor) {
             uiColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
         }
     }
 }
 
-extension SystemColor {
-    public func asSimd() -> SIMD3<Float> {
+public extension SystemColor {
+    func asSimd() -> SIMD3<Float> {
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
         var alpha: CGFloat = 0
 
         getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        
+
         return SIMD3<Float>(Float(red), Float(green), Float(blue))
     }
 }
 
-extension Hue {
-    public static var allCases: [Hue] {
-        get {
-            return [
-                .blue,
-                .orange,
-                .yellow,
-                .green,
-                .pink,
-                .purple,
-                .red,
-                .monochrome,
-                .random
-            ]
-        }
+public extension Hue {
+    static var allCases: [Hue] {
+        return [
+            .blue,
+            .orange,
+            .yellow,
+            .green,
+            .pink,
+            .purple,
+            .red,
+            .monochrome,
+            .random
+        ]
     }
-    
-    public var displayTitle: String {
+
+    var displayTitle: String {
         switch self {
         case .monochrome:
             return "Monochrome"
@@ -130,14 +133,14 @@ extension Hue {
             return "Unknown Palette"
         }
     }
-    
-    public static func randomPalette(includesMonochrome: Bool = true) -> Hue {
+
+    static func randomPalette(includesMonochrome: Bool = true) -> Hue {
         var hues = allCases
-        
+
         if !includesMonochrome {
             hues.removeLast()
         }
-        
+
         return hues.randomElement() ?? .monochrome
     }
 }
