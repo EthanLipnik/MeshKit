@@ -7,8 +7,6 @@
 
 import Foundation
 
-import Foundation
-
 #if canImport(UIKit)
 import UIKit
 public typealias SystemImage = UIImage

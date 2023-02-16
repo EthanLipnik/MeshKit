@@ -76,7 +76,7 @@ public extension Grid where Element == MeshColor {
     }
 
     func isEdge(x: Int, y: Int) -> Bool {
-        return !(x != 0 && x != width - 1 && y != 0 && y != height - 1)
+        !(x != 0 && x != width - 1 && y != 0 && y != height - 1)
     }
 }
 

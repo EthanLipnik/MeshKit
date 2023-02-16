@@ -17,10 +17,10 @@ public struct MeshSize: Codable, Hashable {
     public var height: Int
 
     public static var `default`: MeshSize {
-        return .init()
+        .init()
     }
 
     public static var zero: MeshSize {
-        return .init(width: 0, height: 0)
+        .init(width: 0, height: 0)
     }
 }

@@ -17,6 +17,6 @@ public struct MeshPoint: Codable, Hashable, Equatable {
     public var y: Float
 
     public static var zero: MeshPoint {
-        return MeshPoint()
+        MeshPoint()
     }
 }

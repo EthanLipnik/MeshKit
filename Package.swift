@@ -9,12 +9,13 @@ let package = Package(
         .macOS(.v11),
         .iOS(.v14),
         .macCatalyst(.v14),
-        .tvOS(.v14),
+        .tvOS(.v14)
     ],
     products: [
         .library(
             name: "MeshKit",
-            targets: ["MeshKit"]),
+            targets: ["MeshKit"]
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/EthanLipnik/MeshGradient.git", from: "1.0.8"),
@@ -26,9 +27,11 @@ let package = Package(
             dependencies: [
                 .product(name: "MeshGradient", package: "meshgradient"),
                 .product(name: "RandomColor", package: "randomcolorswift")
-            ]),
+            ]
+        ),
         .testTarget(
             name: "MeshKitTests",
-            dependencies: ["MeshKit"]),
+            dependencies: ["MeshKit"]
+        )
     ]
 )

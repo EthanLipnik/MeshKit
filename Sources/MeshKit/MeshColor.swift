@@ -11,7 +11,7 @@ import RandomColor
 
 public class MeshColor: Equatable, Hashable, Codable {
     public static func == (lhs: MeshColor, rhs: MeshColor) -> Bool {
-        return lhs.location == rhs.location && lhs.color == rhs.color && lhs.tangent == rhs.tangent
+        lhs.location == rhs.location && lhs.color == rhs.color && lhs.tangent == rhs.tangent
     }
 
     public func hash(into hasher: inout Hasher) {
@@ -39,7 +39,7 @@ public class MeshColor: Equatable, Hashable, Codable {
     public var tangent: MeshTangent
 
     public func asSimd() -> SIMD3<Float> {
-        return color.asSimd()
+        color.asSimd()
     }
 
     enum CodingKeys: String, CodingKey {
@@ -72,7 +72,7 @@ public class MeshColor: Equatable, Hashable, Codable {
         var red: CGFloat = 0.0, green: CGFloat = 0.0, blue: CGFloat = 0.0, alpha: CGFloat = 0.0
 
         var uiColor: SystemColor {
-            return SystemColor(red: red, green: green, blue: blue, alpha: alpha)
+            SystemColor(red: red, green: green, blue: blue, alpha: alpha)
         }
 
         init(uiColor: SystemColor) {
@@ -96,7 +96,7 @@ public extension SystemColor {
 
 public extension Hue {
     static var allCases: [Hue] {
-        return [
+        [
             .blue,
             .orange,
             .yellow,

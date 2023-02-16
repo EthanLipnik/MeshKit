@@ -17,6 +17,6 @@ public struct MeshTangent: Codable, Hashable, Equatable {
     public var v: MeshPoint
 
     public static var zero: MeshTangent {
-        return MeshTangent(u: .zero, v: .zero)
+        MeshTangent(u: .zero, v: .zero)
     }
 }

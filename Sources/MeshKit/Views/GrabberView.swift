@@ -58,7 +58,7 @@ struct GrabberView: View {
 
     // (viewWidth*point) / (gridWidth - 1)
     private static func getOffset(_ width: Int, sizeWidth: Int, point: CGFloat) -> CGFloat {
-        return (CGFloat(sizeWidth) * point) / CGFloat(width - 1)
+        (CGFloat(sizeWidth) * point) / CGFloat(width - 1)
     }
 
     struct PointView: View {

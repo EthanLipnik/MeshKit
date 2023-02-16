@@ -25,7 +25,7 @@ public extension MeshColorGrid {
         fileFormat: UTType = .png,
         pixelFormat: MTLPixelFormat = .bgra8Unorm
     ) async throws -> URL {
-        return try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { continuation in
             let grid = self.asControlPoint()
             let dataProvider = MeshGradientState.static(grid: grid)
                 .createDataProvider()
@@ -88,8 +88,8 @@ extension MTLTexture {
     func makeImage(colorSpace: CGColorSpace? = nil) -> CGImage? {
         assert(pixelFormat == .bgra8Unorm)
 
-        let width = self.width
-        let height = self.height
+        let width = width
+        let height = height
         let pixelByteCount = 4 * MemoryLayout<UInt8>.size
         let imageBytesPerRow = width * pixelByteCount
         let imageByteCount = imageBytesPerRow * height
