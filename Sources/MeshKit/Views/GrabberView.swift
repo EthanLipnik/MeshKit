@@ -73,10 +73,12 @@ struct GrabberView: View {
         let isEdge: Bool
         var didMove: (_ translation: CGSize) -> Void
 
+#if os(macOS)
         @State
         private var isShowingOptions: Bool = false
         @State
         private var selectedColor: CGColor = .init(red: 0, green: 0, blue: 0, alpha: 1)
+#endif
 
         @State
         private var offset: CGSize = .zero
@@ -91,8 +93,16 @@ struct GrabberView: View {
                 .animation(.interactiveSpring(), value: offset)
                 .animation(.easeInOut, value: selectedPoint)
                 .frame(maxWidth: 35, maxHeight: 35)
+#if os(macOS)
+                .popover(isPresented: $isShowingOptions) {
+                    optionsView
+                }
+#endif
                 .onTapGesture {
                     selectedPoint = point
+#if os(macOS)
+                    isShowingOptions.toggle()
+#endif
                 }
                 .gesture(
                     DragGesture()
@@ -127,6 +137,24 @@ struct GrabberView: View {
                     selectedColor = newValue.cgColor
                 }
         }
+
+#if os(macOS)
+        var optionsView: some View {
+            VStack {
+                ColorPicker(selection: $selectedColor, supportsOpacity: false) {
+                    Text("Color")
+                }
+                .onChange(of: selectedColor) { newValue in
+                    point.color = SystemColor(cgColor: newValue) ?? point.color
+                    didMove(CGSize(
+                        width: CGFloat.random(in: 0 ..< 500),
+                        height: CGFloat.random(in: 0 ..< 500)
+                    ))
+                }
+            }
+            .padding()
+        }
+#endif
 
         func updateOffset(location: CGPoint) {
             guard !isEdge else { return }
