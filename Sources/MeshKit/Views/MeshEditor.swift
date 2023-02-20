@@ -5,6 +5,7 @@
 //  Created by Ethan Lipnik on 8/28/22.
 //
 
+#if !os(tvOS)
 import SwiftUI
 
 public struct MeshEditor: View {
@@ -76,3 +77,4 @@ struct EditingMeshView_Previews: PreviewProvider {
         )
     }
 }
+#endif

@@ -5,6 +5,7 @@
 //  Created by Ethan Lipnik on 8/28/22.
 //
 
+#if !os(tvOS)
 import SwiftUI
 
 struct GrabberView: View {
@@ -90,12 +91,8 @@ struct GrabberView: View {
                 .animation(.interactiveSpring(), value: offset)
                 .animation(.easeInOut, value: selectedPoint)
                 .frame(maxWidth: 35, maxHeight: 35)
-                .popover(isPresented: $isShowingOptions) {
-                    optionsView
-                }
                 .onTapGesture {
                     selectedPoint = point
-                    isShowingOptions.toggle()
                 }
                 .gesture(
                     DragGesture()
@@ -131,26 +128,6 @@ struct GrabberView: View {
                 }
         }
 
-        var optionsView: some View {
-            VStack {
-                ColorPicker(selection: $selectedColor, supportsOpacity: false) {
-                    Text("Color")
-                }
-                .onChange(of: selectedColor) { newValue in
-#if os(macOS)
-                    point.color = SystemColor(cgColor: newValue) ?? point.color
-#else
-                    point.color = SystemColor(cgColor: newValue)
-#endif
-                    didMove(CGSize(
-                        width: CGFloat.random(in: 0 ..< 500),
-                        height: CGFloat.random(in: 0 ..< 500)
-                    ))
-                }
-            }
-            .padding()
-        }
-
         func updateOffset(location: CGPoint) {
             guard !isEdge else { return }
 
@@ -163,3 +140,4 @@ struct GrabberView: View {
         }
     }
 }
+#endif
