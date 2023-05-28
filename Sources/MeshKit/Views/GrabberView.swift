@@ -130,12 +130,14 @@ struct GrabberView: View {
                             didMove(CGSize(width: width, height: 1 - height))
                         }
                 )
+#if os(macOS)
                 .onAppear {
                     selectedColor = point.color.cgColor
                 }
                 .onChange(of: point.color) { newValue in
                     selectedColor = newValue.cgColor
                 }
+#endif
         }
 
 #if os(macOS)

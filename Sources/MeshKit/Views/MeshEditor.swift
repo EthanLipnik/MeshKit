@@ -5,6 +5,7 @@
 //  Created by Ethan Lipnik on 8/28/22.
 //
 
+import MeshGradient
 #if !os(tvOS)
 import SwiftUI
 
