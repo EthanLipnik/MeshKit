@@ -8,7 +8,12 @@
 import CoreGraphics
 import Foundation
 import RandomColor
+
+#if canImport(UIKit)
 import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
 public class MeshColor: Equatable, Hashable, Codable {
     public static func == (lhs: MeshColor, rhs: MeshColor) -> Bool {
