@@ -50,6 +50,40 @@ public actor MeshKit {
             )
         }
 
+        return generate(
+            colors: colors,
+            size: size,
+            withRandomizedLocations: withRandomizedLocations,
+            locationRandomizationRange: locationRandomizationRange,
+            turbulencyRandomizationRange: turbulencyRandomizationRange
+        )
+    }
+
+    public static func generate(
+        palette: Hue...,
+        luminosity: Luminosity = .bright,
+        size: MeshSize = .default,
+        withRandomizedLocations: Bool = false,
+        locationRandomizationRange: ClosedRange<Float> = -0.2 ... 0.2,
+        turbulencyRandomizationRange: ClosedRange<Float> = -0.25 ... 0.25
+    ) -> MeshColorGrid {
+        generate(
+            palette: palette,
+            luminosity: luminosity,
+            size: size,
+            withRandomizedLocations: withRandomizedLocations,
+            locationRandomizationRange: locationRandomizationRange,
+            turbulencyRandomizationRange: turbulencyRandomizationRange
+        )
+    }
+
+    public static func generate(
+        colors: [SystemColor],
+        size: MeshSize = .default,
+        withRandomizedLocations: Bool = false,
+        locationRandomizationRange: ClosedRange<Float> = -0.2 ... 0.2,
+        turbulencyRandomizationRange: ClosedRange<Float> = -0.25 ... 0.25
+    ) -> MeshColorGrid {
         let simdColors = colors.map { $0.asSimd() }
         let meshRandomizer = MeshRandomizer(
             locationRandomizer: MeshRandomizer
@@ -104,23 +138,5 @@ public actor MeshKit {
         }
 
         return result.asMeshColor()
-    }
-
-    public static func generate(
-        palette: Hue...,
-        luminosity: Luminosity = .bright,
-        size: MeshSize = .default,
-        withRandomizedLocations: Bool = false,
-        locationRandomizationRange: ClosedRange<Float> = -0.2 ... 0.2,
-        turbulencyRandomizationRange: ClosedRange<Float> = -0.25 ... 0.25
-    ) -> MeshColorGrid {
-        generate(
-            palette: palette,
-            luminosity: luminosity,
-            size: size,
-            withRandomizedLocations: withRandomizedLocations,
-            locationRandomizationRange: locationRandomizationRange,
-            turbulencyRandomizationRange: turbulencyRandomizationRange
-        )
     }
 }
