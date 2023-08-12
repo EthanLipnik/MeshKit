@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "meshgradient",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/EthanLipnik/MeshGradient.git",
+      "state" : {
+        "revision" : "e176a9dc45137a2cc93956e6bf80986b484a284e",
+        "version" : "1.0.9"
+      }
+    },
+    {
+      "identity" : "randomcolorswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/EthanLipnik/RandomColorSwift.git",
+      "state" : {
+        "revision" : "cb118928dfd40baaa31dc1bd87c97599bcf86d75",
+        "version" : "2.0.1"
+      }
+    }
+  ],
+  "version" : 2
+}
